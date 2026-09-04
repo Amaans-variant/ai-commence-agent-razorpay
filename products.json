@@ -1,0 +1,18 @@
+{
+  "products": [
+    {
+      "id": "prod_1",
+      "name": "Pro Study Dashboard Subscription",
+      "description": "1-month access to premium widgets and focus tools.",
+      "price_in_paise": 50000, 
+      "currency": "INR"
+    },
+    {
+      "id": "prod_2",
+      "name": "Lifetime Access - Study Assistant",
+      "description": "Unlimited automated video summaries and notes.",
+      "price_in_paise": 250000,
+      "currency": "INR"
+    }
+  ]
+}
