@@ -1,4 +1,5 @@
 import os
+import json
 from dotenv import load_dotenv
 from pymongo import MongoClient
 
@@ -27,7 +28,8 @@ elif isinstance(data, dict):
 
 # Insert into the live cloud database
 if docs:
-    collection.insert_many(docs)
+    products_collection.delete_many({})
+    products_collection.insert_many(docs)
     print(f"✅ Successfully inserted {len(docs)} products into MongoDB Atlas!")
 else:
     print("⚠️ Could not find products to insert. Check your JSON format.")
