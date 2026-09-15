@@ -48,6 +48,7 @@ class ChatRequest(BaseModel):
 class AgentResponse(BaseModel):
     message: str
     intent: str
+    action: str
     product_id: Optional[str] = None
     proposed_price: Optional[int] = None
 
@@ -97,6 +98,7 @@ def chat_with_agent(req: ChatRequest):
     2. THE UPSELL: When a user asks about a single product, proactively suggest the second product as a complementary bundle. Explain why they work well together.
     3. You are a sales negotiator. You can offer slight discounts to close a deal, but you must ask the user for their offer first.
     4. You must set the intent to 'checkout' when an agreement on price is reached and the user wants to buy. Ensure product_id and proposed_price are populated correctly.
+    5. You must set the 'action' field to one of ["NONE", "SHOW_PRODUCT", "SHOW_CART", "NEGOTIATE"]. Set to 'SHOW_PRODUCT' when discussing a specific product.
     """
     
     # Initialize a new chat memory if this user doesn't have one yet
@@ -122,20 +124,27 @@ def chat_with_agent(req: ChatRequest):
         try:
             json_resp = json.loads(response_text)
         except json.JSONDecodeError:
-            return {"reply": response_text}
+            return {"message": response_text, "action": "NONE", "data": None}
             
         message = json_resp.get("message", "")
         intent = json_resp.get("intent", "")
+        action = json_resp.get("action", "NONE")
         product_id = json_resp.get("product_id")
         proposed_price = json_resp.get("proposed_price")
+        
+        data = None
+        payment_link = None
+
+        if product_id:
+            product = products_collection.find_one({"id": product_id}, {"_id": 0})
+            if product:
+                data = product
 
         if intent == "checkout" and product_id and proposed_price:
-            product = products_collection.find_one({"id": product_id})
-            if product:
-                floor_price = product.get("floor_price", 0)
+            if data:
+                floor_price = data.get("floor_price", 0)
                 if proposed_price >= floor_price:
                     payment_link = generate_payment_link(product_id, proposed_price)
-                    message += f"\n\nHere is your payment link: {payment_link}"
                 else:
                     # SYSTEM OVERRIDE
                     system_override_msg = f"SYSTEM: The proposed price of {proposed_price} is below the floor limit. Apologize to the user and counter-offer with a price higher than {floor_price}."
@@ -143,12 +152,18 @@ def chat_with_agent(req: ChatRequest):
                     try:
                         new_json = json.loads(new_response.text)
                         message = new_json.get("message", "")
+                        action = new_json.get("action", action)
                     except:
                         message = new_response.text
 
-        return {"reply": message}
+        return {
+            "message": message,
+            "action": action,
+            "data": data,
+            "payment_link": payment_link
+        }
     except Exception as e:
-        return {"reply": f"An error occurred: {str(e)}"}
+        return {"message": f"An error occurred: {str(e)}", "action": "NONE", "data": None}
 
 @app.post("/webhook")
 async def razorpay_webhook(request: Request):
