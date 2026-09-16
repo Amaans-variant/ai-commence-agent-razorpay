@@ -1,5 +1,5 @@
 export const currentSessionId = "user_" + Math.random().toString(36).substring(7);
-export const API_URL = window.location.origin;
+export const API_URL = "";
 
 export async function fetchChat(messageText) {
     const response = await fetch(`${API_URL}/chat`, {
