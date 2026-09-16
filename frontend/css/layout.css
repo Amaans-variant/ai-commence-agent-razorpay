@@ -1,0 +1,284 @@
+:root {
+    --primary: #10b981;
+    --primary-hover: #059669;
+    --bg-color: #051008;
+    --chat-bg: rgba(255, 255, 255, 0.95);
+    --ai-msg-bg: #f1f3f4;
+    --ai-msg-text: #202124;
+    --user-msg-bg: #10b981;
+    --user-msg-text: #ffffff;
+    --success: #10b981;
+    --card-bg: rgba(255, 255, 255, 0.95);
+}
+
+body { 
+    font-family: 'Inter', sans-serif; 
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-color);
+    /* Sci-fi Green Grid Background with Subtle Gradients */
+    background-image: 
+        linear-gradient(rgba(16, 185, 129, 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(16, 185, 129, 0.15) 1px, transparent 1px),
+        radial-gradient(circle at top right, rgba(16, 185, 129, 0.15), transparent 60%),
+        radial-gradient(circle at bottom left, rgba(4, 47, 32, 0.8), transparent 70%);
+    background-size: 50px 50px, 50px 50px, 100% 100%, 100% 100%;
+    background-position: center;
+    box-shadow: inset 0 0 200px rgba(0,0,0,0.9);
+    overflow: hidden;
+}
+
+#app-container {
+    display: flex;
+    width: 90%;
+    max-width: 450px;
+    height: 85vh;
+    background: transparent;
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255,255,255,0.1);
+    overflow: hidden;
+    transition: max-width 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+    backdrop-filter: blur(8px);
+}
+
+body.split-active #app-container {
+    max-width: 1200px;
+}
+
+/* --- Left Column: Chat Pane --- */
+#chat-pane { 
+    background: var(--chat-bg); 
+    display: flex; 
+    flex-direction: column; 
+    height: 100%;
+    width: 100%;
+    flex-shrink: 0;
+    border-right: 1px solid rgba(0,0,0,0.05);
+}
+
+body.split-active #chat-pane {
+    width: 380px;
+}
+
+#chat-header {
+    background: transparent;
+    padding: 20px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar {
+    width: 36px;
+    height: 36px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+}
+
+.agent-info h2 {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.agent-info p {
+    margin: 0;
+    font-size: 12px;
+    color: #10b981;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.agent-info p::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: var(--success);
+    border-radius: 50%;
+}
+
+#messages { 
+    flex-grow: 1; 
+    overflow-y: auto; 
+    padding: 20px; 
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: transparent;
+}
+
+#messages::-webkit-scrollbar { width: 6px; }
+#messages::-webkit-scrollbar-track { background: transparent; }
+#messages::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+.msg { 
+    padding: 12px 16px; 
+    border-radius: 16px; 
+    max-width: 85%; 
+    font-size: 14.5px;
+    line-height: 1.5;
+    word-wrap: break-word;
+}
+
+.user-msg { 
+    background: var(--user-msg-bg); 
+    color: var(--user-msg-text); 
+    align-self: flex-end; 
+    border-bottom-right-radius: 4px;
+    box-shadow: 0 2px 5px rgba(16, 185, 129, 0.2);
+}
+
+.ai-msg { 
+    background: var(--ai-msg-bg); 
+    color: var(--ai-msg-text); 
+    align-self: flex-start; 
+    border-bottom-left-radius: 4px;
+}
+
+#input-area { 
+    display: flex; 
+    padding: 16px; 
+    background: transparent; 
+    border-top: 1px solid rgba(0,0,0,0.05);
+    gap: 10px;
+    align-items: center;
+}
+
+input { 
+    flex-grow: 1; 
+    padding: 12px 16px; 
+    border: 1px solid #e2e8f0; 
+    border-radius: 24px; 
+    outline: none;
+    font-size: 14px;
+    transition: border-color 0.2s;
+    background: rgba(255,255,255,0.5);
+}
+
+input:focus {
+    border-color: var(--primary);
+    background: #ffffff;
+}
+
+button { 
+    width: 44px;
+    height: 44px;
+    background: var(--primary); 
+    color: white; 
+    border: none; 
+    border-radius: 50%; 
+    cursor: pointer; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.1s;
+    flex-shrink: 0;
+}
+
+button:hover { background: var(--primary-hover); }
+button:active { transform: scale(0.95); }
+
+button svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+    margin-left: 2px;
+}
+
+/* --- Right Column: Visual Stage --- */
+#visual-stage {
+    position: relative;
+    background: radial-gradient(circle at center, rgba(30,41,59,0.85) 0%, rgba(15,23,42,0.95) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 0;
+    padding: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+    flex-shrink: 1;
+    border-left: 1px solid rgba(255,255,255,0.05);
+}
+
+body.split-active #visual-stage {
+    width: calc(100% - 380px);
+    padding: 40px;
+    opacity: 1;
+}
+
+/* Generated Card Styles */
+.product-card {
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 32px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    text-align: center;
+}
+
+.product-card h3 {
+    margin: 0 0 12px 0;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.product-card p.desc {
+    font-size: 16px;
+    color: #64748b;
+    margin: 0 0 24px 0;
+    line-height: 1.6;
+}
+
+.product-card .price {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0 0 24px 0;
+}
+
+.product-card .display-price {
+    font-size: 18px;
+    color: #94a3b8;
+    text-decoration: line-through;
+    margin-right: 8px;
+}
+
+.pay-btn { 
+    display: inline-flex; 
+    align-items: center;
+    justify-content: center;
+    padding: 14px 32px; 
+    background: var(--success); 
+    color: white; 
+    text-decoration: none; 
+    border-radius: 12px; 
+    font-weight: 600; 
+    font-size: 16px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.pay-btn:hover {
+    background: #0e9f6e;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}

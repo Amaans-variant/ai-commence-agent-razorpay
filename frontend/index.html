@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ezio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+    <div id="app-container">
+        <div id="chat-pane">
+            <div id="chat-header">
+                <div class="avatar">AI</div>
+                <div class="agent-info">
+                    <h2>Ezio</h2>
+                    <p>Online</p>
+                </div>
+            </div>
+
+            <div id="messages">
+                <div class="msg ai-msg">Hello! I can help you explore our gadgets, grooming tools, and desk accessories, or generate a checkout link whenever you're ready. What are you looking for today?</div>
+            </div>
+            
+            <div id="input-area">
+                <input type="text" id="user-input" placeholder="Type your message..." autocomplete="off">
+                <button id="send-btn" aria-label="Send Message">
+                    <svg xmlns="http://www.3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div id="visual-stage"></div>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
