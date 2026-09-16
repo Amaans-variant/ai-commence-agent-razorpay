@@ -25,7 +25,7 @@ def get_chat_session(session_id: str):
         """
         
         active_chats[session_id] = ai_client.chats.create(
-            model="gemini-2.5-flash",
+            model="gemini-3.6-flash",
             config=types.GenerateContentConfig(
                 system_instruction=system_instruction,
                 response_mime_type="application/json",
